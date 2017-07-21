@@ -1,6 +1,9 @@
 package com.kyh.rest;
 
 import com.kyh.config.WechatMpProperties;
+import com.kyh.dispatcher.EventDispatcher;
+import com.kyh.dispatcher.MsgDispatcher;
+import com.kyh.utils.MessageUtil;
 import com.kyh.utils.SignUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -8,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * Created by kongyunhui on 2017/7/20.
@@ -47,7 +53,22 @@ public class WechatController {
     }
 
     @RequestMapping(value = "security", method = RequestMethod.POST)
-    public void doPost() {
+    public String doPost(HttpServletRequest request) {
         System.out.println("这是 post 方法！");
+        String respXML = "success";
+        try {
+            Map<String, String> map=MessageUtil.parseXml(request);
+            System.out.println("-requestBody-->" + map);
+            String msgType=map.get("MsgType");
+            if(MessageUtil.REQ_MESSAGE_TYPE_EVENT.equals(msgType)){
+                respXML = EventDispatcher.processEvent(map);//进入事件处理
+            }else{
+                respXML = MsgDispatcher.processMessage(map);//进入消息处理
+            }
+        }catch(Exception e){
+            logger.error("error:{}", e.getMessage());
+        }
+        System.out.println("-requestBody-->" + respXML);
+        return respXML;
     }
 }
