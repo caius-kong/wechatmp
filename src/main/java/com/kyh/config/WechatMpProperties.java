@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * wechat mp properties
+ * wechat mp properties 基础配置
  */
 @ConfigurationProperties(prefix = "wechat.mp")
 public class WechatMpProperties {
