@@ -1,6 +1,6 @@
 package com.kyh.rest;
 
-import com.kyh.config.WechatMpProperties;
+import com.kyh.config.ClientInitializer;
 import com.kyh.dispatcher.EventDispatcher;
 import com.kyh.dispatcher.MsgDispatcher;
 import com.kyh.utils.MessageUtil;
@@ -9,9 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -20,12 +18,11 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/wechat")
-@EnableConfigurationProperties(WechatMpProperties.class)
 public class WechatController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private WechatMpProperties properties;
+    private ClientInitializer initializer;
 
     @RequestMapping("")
     public String index(){
@@ -45,7 +42,7 @@ public class WechatController {
             throw new IllegalArgumentException("请求参数非法，请核实!");
         }
 
-        if (SignUtil.checkSignature(properties.getToken(), timestamp, nonce, signature)) {
+        if (SignUtil.checkSignature(initializer.getProperties().getToken(), timestamp, nonce, signature)) {
             return echostr;
         }
 
