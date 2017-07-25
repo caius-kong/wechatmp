@@ -8,14 +8,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "wechat.mp.url")
 public class WechatMpUrlProperties {
     /**
-     * 获取 token 的 url
+     * 获取 token 的url
      */
     private String tokenUrl;
 
     /**
-     * 上传 多媒体文件 的 url
+     * 上传 多媒体文件 的url
      */
     private String mediaUrl;
+
+    /**
+     * 获取 用户信息 的url
+     */
+    private String userInfoUrl;
 
     public void setTokenUrl(String tokenUrl) {
         this.tokenUrl = tokenUrl;
@@ -31,5 +36,13 @@ public class WechatMpUrlProperties {
 
     public void setMediaUrl(String mediaUrl) {
         this.mediaUrl = mediaUrl;
+    }
+
+    public String getUserInfoUrl() {
+        return userInfoUrl;
+    }
+
+    public void setUserInfoUrl(String userInfoUrl) {
+        this.userInfoUrl = userInfoUrl;
     }
 }

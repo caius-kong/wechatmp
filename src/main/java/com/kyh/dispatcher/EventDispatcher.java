@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Component
 public class EventDispatcher {
-    public String processEvent(Map<String, String> map) {
+    public String processEvent(Map<String, String> map) throws Exception{
         String openId = map.get("FromUserName"); // 用户openId
         String mpId = map.get("ToUserName"); // 公众号原始 ID
 

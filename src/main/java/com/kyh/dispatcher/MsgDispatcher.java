@@ -3,8 +3,10 @@ package com.kyh.dispatcher;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.kyh.config.ClientInitializer;
+import com.kyh.entity.User;
 import com.kyh.message.resp.*;
 import com.kyh.service.TokenService;
+import com.kyh.service.UserService;
 import com.kyh.utils.HttpPostUploadUtil;
 import com.kyh.utils.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,10 @@ public class MsgDispatcher {
     private ClientInitializer initializer;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private UserService userService;
 
-    public String processMessage(Map<String, String> map) {
+    public String processMessage(Map<String, String> map) throws Exception{
         String openId = map.get("FromUserName"); // 用户openId
         String mpId = map.get("ToUserName"); // 公众号原始 ID
 
@@ -65,6 +69,10 @@ public class MsgDispatcher {
                     Image image = new Image(mediaId);
                     ImageMessage imageMessage = new ImageMessage(openId, mpId, new Date().getTime(), MessageUtil.RESP_MESSAGE_TYPE_IMAGE, image);
                     return MessageUtil.toXml(imageMessage, ImageMessage.class);
+                case "4":
+                    // 显示用户信息
+                    User userInfo = userService.getUserInfo(openId);
+                    System.out.println("userInfo:" + userInfo);
                 default:
                     return "";
             }
