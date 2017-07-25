@@ -5,14 +5,13 @@ package com.kyh.message.resp;
  */
 public class VoiceMessage {
 
-    private String MediaId;
+    private Voice Voice;
 
-    public String getMediaId() {
-        return MediaId;
+    public Voice getVoice() {
+        return Voice;
     }
 
-    public void setMediaId(String mediaId) {
-        MediaId = mediaId;
+    public void setVoice(Voice voice) {
+        Voice = voice;
     }
-
 }

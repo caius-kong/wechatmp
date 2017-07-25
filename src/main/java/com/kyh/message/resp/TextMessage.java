@@ -14,7 +14,7 @@ public class TextMessage extends BaseMessage {
         this.setFromUserName(fromUserName);
         this.setCreateTime(createTime);
         this.setMsgType(msgType);
-        this.Content = content;
+        this.setContent(content);
     }
 
     public String getContent() {

@@ -3,15 +3,24 @@ package com.kyh.message.resp;
 /**
  * 图片消息（多媒体消息）
  */
-public class ImageMessage {
+public class ImageMessage extends BaseMessage{
 
-    private String MediaId;
+    private Image Image;
 
-    public String getMediaId() {
-        return MediaId;
+    public ImageMessage(String toUserName, String fromUserName, long createTime, String msgType, Image image) {
+        this.setToUserName(toUserName);
+        this.setFromUserName(fromUserName);
+        this.setCreateTime(createTime);
+        this.setMsgType(msgType);
+        this.Image = image;
+    }
+    public Image getImage() {
+        return Image;
     }
 
-    public void setMediaId(String mediaId) {
-        MediaId = mediaId;
+    public void setImage(Image image) {
+        Image = image;
     }
+
+
 }
