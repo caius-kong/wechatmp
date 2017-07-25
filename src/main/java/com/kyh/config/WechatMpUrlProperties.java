@@ -12,11 +12,24 @@ public class WechatMpUrlProperties {
      */
     private String tokenUrl;
 
+    /**
+     * 上传 多媒体文件 的 url
+     */
+    private String mediaUrl;
+
     public void setTokenUrl(String tokenUrl) {
         this.tokenUrl = tokenUrl;
     }
 
     public String getTokenUrl() {
         return tokenUrl;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
     }
 }

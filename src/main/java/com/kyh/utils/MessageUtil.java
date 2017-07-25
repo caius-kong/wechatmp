@@ -27,14 +27,19 @@ public class MessageUtil {
     public static final String RESP_MESSAGE_TYPE_TEXT = "text";
 
     /**
-     * 返回消息类型：音乐
-     */
-    public static final String RESP_MESSAGE_TYPE_MUSIC = "music";
-
-    /**
      * 返回消息类型：图文
      */
     public static final String RESP_MESSAGE_TYPE_NEWS = "news";
+
+    /**
+     * 返回消息类型：音乐
+     */
+    public static final String RESP_MESSAGE_TYPE_IMAGE = "image";
+
+    /**
+     * 返回消息类型：音乐
+     */
+    public static final String RESP_MESSAGE_TYPE_MUSIC = "music";
 
     /**
      * 请求消息类型：文本
@@ -135,12 +140,17 @@ public class MessageUtil {
      *
      * @param message 回复消息实体对象
      * @param messageClazz 回复消息对象类型
-     * @param subNodeClazz 如果回复消息对象拥有复杂类型的属性，则执行其类型；若没有为null （例如NewsMessage拥有复杂类型的属性Article）
+     * @param subNodeClazz 回复消息对象的子属性(list)的元素类型。例如newsMessage的articles的元素类型Article
      * @return
      */
     public static String toXml(Object message, Class messageClazz, Class subNodeClazz) {
         xStream.alias("xml", messageClazz);
         if(subNodeClazz != null) xStream.alias("item", subNodeClazz);
+        return xStream.toXML(message);
+    }
+
+    public static String toXml(Object message, Class messageClazz) {
+        xStream.alias("xml", messageClazz);
         return xStream.toXML(message);
     }
 

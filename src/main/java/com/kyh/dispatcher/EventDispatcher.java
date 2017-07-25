@@ -1,14 +1,16 @@
 package com.kyh.dispatcher;
 
 import com.kyh.utils.MessageUtil;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 /**
  * 事件推送处理分发器
  */
+@Component
 public class EventDispatcher {
-    public static String processEvent(Map<String, String> map) {
+    public String processEvent(Map<String, String> map) {
         if (map.get("Event").equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) { //关注事件
             System.out.println("==============这是关注事件！");
         }
@@ -32,7 +34,6 @@ public class EventDispatcher {
         if (map.get("Event").equals(MessageUtil.EVENT_TYPE_VIEW)) { //自定义菜单VIEW事件
             System.out.println("==============这是自定义菜单VIEW事件！");
         }
-
         return null;
     }
 }

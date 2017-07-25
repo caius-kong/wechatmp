@@ -23,6 +23,10 @@ public class WechatController {
 
     @Autowired
     private ClientInitializer initializer;
+    @Autowired
+    private MsgDispatcher msgDispatcher;
+    @Autowired
+    private EventDispatcher eventDispatcher;
 
     @RequestMapping("")
     public String index(){
@@ -58,12 +62,12 @@ public class WechatController {
             System.out.println("-requestBody-->" + map);
             String msgType=map.get("MsgType");
             if(MessageUtil.REQ_MESSAGE_TYPE_EVENT.equals(msgType)){
-                respXML = EventDispatcher.processEvent(map);//进入事件处理
+                respXML = eventDispatcher.processEvent(map);//进入事件处理
             }else{
-                respXML = MsgDispatcher.processMessage(map);//进入消息处理
+                respXML = msgDispatcher.processMessage(map);//进入消息处理
             }
         }catch(Exception e){
-            logger.error("error:{}", e.getMessage());
+            logger.error("error:{}", e);
         }
         System.out.println("-requestBody-->" + respXML);
         return respXML;

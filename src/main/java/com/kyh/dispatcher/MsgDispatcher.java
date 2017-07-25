@@ -1,44 +1,74 @@
 package com.kyh.dispatcher;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.kyh.message.resp.NewsMessage;
-import com.kyh.message.resp.TextMessage;
+import com.kyh.config.ClientInitializer;
+import com.kyh.message.resp.*;
+import com.kyh.service.TokenService;
+import com.kyh.utils.HttpPostUploadUtil;
 import com.kyh.utils.MessageUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 普通消息处理分发器
  */
+@Component
 public class MsgDispatcher {
-    public static String processMessage(Map<String, String> map) {
+
+    @Autowired
+    private ClientInitializer initializer;
+    @Autowired
+    private TokenService tokenService;
+
+    public String processMessage(Map<String, String> map) {
         String openId = map.get("FromUserName"); // 用户openId
         String mpId = map.get("ToUserName"); // 公众号原始 ID
 
 
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) { // 文本消息
             System.out.println("==============这是文本消息！");
-            // 根据业务逻辑封装回复消息实体
-            String content = "这里是孔昀晖的个人订阅号！";
-            TextMessage textMessage = new TextMessage(openId, mpId, new Date().getTime(),
-                    MessageUtil.RESP_MESSAGE_TYPE_TEXT,
-                    content);
-            // 解析成xml并返回
-            return MessageUtil.toXml(textMessage, TextMessage.class, null);
+
+            switch (Integer.parseInt(map.get("Content"))) {
+                case 1:
+                    // 回复文本消息
+                    TextMessage textMessage = new TextMessage(openId, mpId, new Date().getTime(),
+                            MessageUtil.RESP_MESSAGE_TYPE_TEXT,
+                            "这里是孔昀晖的公众号！");
+                    return MessageUtil.toXml(textMessage, TextMessage.class);
+                case 2:
+                    // 回复图文消息
+                    Article article1 = new Article("微信公众号开发源码(java版)", "基于springboot的微信公众号开发项目，可以将该项目作为开发脚手架！", "http://443e958d.ngrok.io/images/logo.jpg", "https://github.com/kongyunhui/wechatmp");
+                    ArrayList<Article> articles = Lists.newArrayList(article1);
+
+                    NewsMessage newsMessage = new NewsMessage(openId, mpId, new Date().getTime(), MessageUtil.RESP_MESSAGE_TYPE_NEWS, articles);
+                    return MessageUtil.toXml(newsMessage, NewsMessage.class, Article.class);
+                case 3:
+                    // 回复图片消息
+                    String urlStr = initializer.getUrlProperties().getMediaUrl() + tokenService.getToken() + "&type=image";
+
+                    Map<String, String> textMap = new HashMap<>();
+                    textMap.put("name", "testname");
+
+                    Map<String, String> fileMap = new HashMap<>();
+                    fileMap.put("userfile", "/Users/kongyunhui/Desktop/car.jpg");
+
+                    String mediaIdRs = HttpPostUploadUtil.formUpload(urlStr, textMap, fileMap);
+
+                    String mediaId = JSONObject.parseObject(mediaIdRs, JSONObject.class).getString("media_id");
+                    Image image = new Image(mediaId);
+                    ImageMessage imageMessage = new ImageMessage(openId, mpId, new Date().getTime(), MessageUtil.RESP_MESSAGE_TYPE_IMAGE, image);
+                    return MessageUtil.toXml(imageMessage, ImageMessage.class);
+            }
         }
 
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) { // 图片消息
             System.out.println("==============这是图片消息！");
-
-            NewsMessage.Article article1 = new NewsMessage.Article("微信公众号开发源码(java版)", "基于springboot的微信公众号开发项目，可以将该项目作为开发脚手架！", "http://f8e1b8e4.ngrok.io/images/logo.jpg", "https://github.com/kongyunhui/wechatmp");
-            ArrayList<NewsMessage.Article> articles = Lists.newArrayList(article1);
-            NewsMessage newsMessage = new NewsMessage(openId, mpId, new Date().getTime(),
-                    MessageUtil.RESP_MESSAGE_TYPE_NEWS,
-                    articles.size(), articles);
-
-            return MessageUtil.toXml(newsMessage, NewsMessage.class, NewsMessage.Article.class);
         }
 
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_LINK)) { // 链接消息
