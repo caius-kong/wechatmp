@@ -34,21 +34,22 @@ public class MsgDispatcher {
         if (map.get("MsgType").equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) { // 文本消息
             System.out.println("==============这是文本消息！");
 
-            switch (Integer.parseInt(map.get("Content"))) {
-                case 1:
+            String content = map.get("Content");
+            switch (content) {
+                case "1":
                     // 回复文本消息
                     TextMessage textMessage = new TextMessage(openId, mpId, new Date().getTime(),
                             MessageUtil.RESP_MESSAGE_TYPE_TEXT,
                             "这里是孔昀晖的公众号！");
                     return MessageUtil.toXml(textMessage, TextMessage.class);
-                case 2:
+                case "2":
                     // 回复图文消息
                     Article article1 = new Article("微信公众号开发源码(java版)", "基于springboot的微信公众号开发项目，可以将该项目作为开发脚手架！", "http://443e958d.ngrok.io/images/logo.jpg", "https://github.com/kongyunhui/wechatmp");
                     ArrayList<Article> articles = Lists.newArrayList(article1);
 
                     NewsMessage newsMessage = new NewsMessage(openId, mpId, new Date().getTime(), MessageUtil.RESP_MESSAGE_TYPE_NEWS, articles);
                     return MessageUtil.toXml(newsMessage, NewsMessage.class, Article.class);
-                case 3:
+                case "3":
                     // 回复图片消息
                     String urlStr = initializer.getUrlProperties().getMediaUrl() + tokenService.getToken() + "&type=image";
 
@@ -64,6 +65,8 @@ public class MsgDispatcher {
                     Image image = new Image(mediaId);
                     ImageMessage imageMessage = new ImageMessage(openId, mpId, new Date().getTime(), MessageUtil.RESP_MESSAGE_TYPE_IMAGE, image);
                     return MessageUtil.toXml(imageMessage, ImageMessage.class);
+                default:
+                    return "";
             }
         }
 

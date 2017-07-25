@@ -1,0 +1,29 @@
+{
+  "button": [
+    {
+      "name": "主页",
+      "type": "view",
+      "url": "http://443e958d.ngrok.io/index.html"
+    },
+    {
+      "name": "菜单",
+      "sub_button": [
+        {
+          "name": "历史消息",
+          "type": "click",
+          "key": "history"
+        },
+        {
+          "name": "github",
+          "type": "view",
+          "url": "https://github.com/kongyunhui/wechatmp"
+        }
+      ]
+    },
+    {
+      "name": "赞我",
+      "type": "click",
+      "key": "support"
+    }
+  ]
+}
